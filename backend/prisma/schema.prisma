@@ -14,6 +14,7 @@ model Parque {
   localizacao String
   imagem      String?
   trilhas     Trilha[]
+  eventos Evento[]
 }
 
 model Trilha {
@@ -22,6 +23,9 @@ model Trilha {
   dificuldade String
   distancia   Float
   descricao   String
+  imagem      String?
+  latitude    Float?
+  longitude   Float?
   parqueId    Int
   parque      Parque  @relation(fields: [parqueId], references: [id])
 }
@@ -32,6 +36,11 @@ model Evento {
   descricao String
   data      DateTime
   local     String
+  horario   String?
+  categoria String?
+  linkMapa  String?
+  parqueId  Int?
+  parque    Parque?  @relation(fields: [parqueId], references: [id])
 }
 
 model Aviso {

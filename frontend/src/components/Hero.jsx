@@ -4,13 +4,21 @@ import hero1 from "../assets/hero1.webp"
 import hero2 from "../assets/hero2.jpg"
 import hero3 from "../assets/hero3.jpg"
 
-const imagens = [hero1, hero2, hero3]
-
-function Hero() {
+function Hero({
+  imagens = [hero1, hero2, hero3],
+  titulo = "Explore trilhas e parques 🌿",
+  descricao = "Descubra a natureza de Teresópolis",
+  altura = "75vh",
+  mostrarBusca = true
+}) {
 
   const [index, setIndex] = useState(0)
 
+  const slideshow = imagens.length > 1
+
   useEffect(() => {
+
+    if (!slideshow) return
 
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % imagens.length)
@@ -18,11 +26,14 @@ function Hero() {
 
     return () => clearInterval(interval)
 
-  }, [])
+  }, [imagens, slideshow])
 
   return (
 
-    <div className="relative h-[75vh] w-full overflow-hidden">
+    <div
+      className="relative w-full overflow-hidden"
+      style={{ height: altura }}
+    >
 
       {/* imagens */}
 
@@ -40,8 +51,6 @@ function Hero() {
           }}
         >
 
-          {/* overlay escuro */}
-
           <div className="absolute inset-0 bg-black/40"></div>
 
         </div>
@@ -55,26 +64,30 @@ function Hero() {
         <div className="max-w-2xl">
 
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Explore trilhas e parques 🌿
+            {titulo}
           </h1>
 
           <p className="mb-6 text-lg">
-            Descubra a natureza de Teresópolis
+            {descricao}
           </p>
 
-          <div className="bg-white rounded-full p-2 flex shadow-lg">
+          {mostrarBusca && (
 
-            <input
-              type="text"
-              placeholder="Buscar trilha ou parque..."
-              className="flex-1 px-4 py-2 text-black outline-none rounded-full"
-            />
+            <div className="bg-white rounded-full p-2 flex shadow-lg">
 
-            <button className="bg-green-600 text-white px-6 py-2 rounded-full">
-              Buscar
-            </button>
+              <input
+                type="text"
+                placeholder="Buscar trilha ou parque..."
+                className="flex-1 px-4 py-2 text-black outline-none rounded-full"
+              />
 
-          </div>
+              <button className="bg-green-600 text-white px-6 py-2 rounded-full">
+                Buscar
+              </button>
+
+            </div>
+
+          )}
 
         </div>
 
@@ -82,25 +95,30 @@ function Hero() {
 
       {/* bolinhas */}
 
-      <div className="absolute bottom-6 w-full flex justify-center gap-3">
+      {slideshow && (
 
-        {imagens.map((_, i) => (
+        <div className="absolute bottom-6 w-full flex justify-center gap-3">
 
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            className={`w-3 h-3 rounded-full transition ${
-              index === i ? "bg-white" : "bg-white/40"
-            }`}
-          />
+          {imagens.map((_, i) => (
 
-        ))}
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              className={`w-3 h-3 rounded-full transition ${
+                index === i ? "bg-white" : "bg-white/40"
+              }`}
+            />
 
-      </div>
+          ))}
+
+        </div>
+
+      )}
 
     </div>
 
   )
+
 }
 
 export default Hero

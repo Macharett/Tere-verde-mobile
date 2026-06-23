@@ -1,5 +1,6 @@
 const prisma = require("../services/prisma")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 
 async function login(req, res) {
   try {
@@ -13,14 +14,29 @@ async function login(req, res) {
       return res.status(401).json({ erro: "Administrador não encontrado" })
     }
 
-    const senhaValida = await bcrypt.compare(senha, admin.senha)
+    const senhaValida = await bcrypt.compare(
+      senha,
+      admin.senha
+    )
 
     if (!senhaValida) {
       return res.status(401).json({ erro: "Senha incorreta" })
     }
 
+    const token = jwt.sign(
+      {
+        id: admin.id,
+        email: admin.email
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d"
+      }
+    )
+
     res.json({
       mensagem: "Login realizado com sucesso",
+      token,
       admin: {
         id: admin.id,
         nome: admin.nome,
@@ -29,8 +45,11 @@ async function login(req, res) {
     })
 
   } catch (error) {
-  console.error(error)   // <-- adiciona isso
-  res.status(500).json({ erro: "Erro no login" })
+    console.error(error)
+
+    res.status(500).json({
+      erro: "Erro no login"
+    })
   }
 }
 
