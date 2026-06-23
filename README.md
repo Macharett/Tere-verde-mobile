@@ -129,4 +129,4 @@ Projeto desenvolvido para conclusão do curso de Tecnologia em Análise e Desenv
 
 ## Autor
 
-Anderson
+Anderson Macharett Pedrozo Rocha
