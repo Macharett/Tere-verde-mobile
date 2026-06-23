@@ -11,6 +11,13 @@ function Navbar() {
   const location = useLocation()
   const adminPage = location.pathname === "/admin"
 
+  const token = localStorage.getItem("token")
+
+  function sair() {
+    localStorage.removeItem("token")
+    window.location.href = "/"
+  }
+
   useEffect(() => {
     function handleScroll() {
       setScrolled(window.scrollY > 50)
@@ -25,11 +32,10 @@ function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        navbarClara
-          ? "bg-white shadow-md text-black"
-          : "bg-transparent text-white"
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${navbarClara
+        ? "bg-white shadow-md text-black"
+        : "bg-transparent text-white"
+        }`}
     >
       <div className="flex justify-between items-center px-4 md:px-10 py-4">
         <Link to="/" className="flex items-center gap-2">
@@ -52,7 +58,24 @@ function Navbar() {
           <Link to="/eventos" className="hover:text-green-600">
             Eventos
           </Link>
+
+          {token && (
+            <>
+              <Link to="/admin" className="hover:text-green-600">
+                Admin
+              </Link>
+
+              <button
+                onClick={sair}
+                className="hover:text-red-600 font-medium"
+              >
+                Sair
+              </button>
+            </>
+          )}
         </div>
+
+
 
         <button
           type="button"
@@ -89,6 +112,26 @@ function Navbar() {
             >
               Eventos
             </Link>
+
+            {token && (
+              <>
+                <Link
+                  to="/admin"
+                  onClick={() => setMenuOpen(false)}
+                  className="font-medium"
+                >
+                  Admin
+                </Link>
+
+                <button
+                  onClick={sair}
+                  className="font-medium text-left text-red-600"
+                >
+                  Sair
+                </button>
+              </>
+            )}
+
           </div>
         </div>
       )}
